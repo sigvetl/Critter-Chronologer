@@ -1,17 +1,27 @@
-package com.udacity.jdnd.course3.critter.user;
+package com.udacity.jdnd.course3.critter.entity;
 
+import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
+import org.hibernate.annotations.Nationalized;
+
+import javax.persistence.*;
 import java.time.DayOfWeek;
 import java.util.Set;
 
-/**
- * Represents the form that employee request and response data takes. Does not map
- * to the database directly.
- */
-public class EmployeeDTO {
-    private long id;
-    private String name;
-    private Set<EmployeeSkill> skills;
-    private Set<DayOfWeek> daysAvailable;
+@Entity
+public class Employee {
+
+    @Id
+    @GeneratedValue
+    long id;
+
+    @Nationalized
+    String name;
+
+    @ElementCollection
+    Set<EmployeeSkill> skills;
+
+    @ElementCollection
+    Set<DayOfWeek> daysAvailable;
 
     public long getId() {
         return id;
