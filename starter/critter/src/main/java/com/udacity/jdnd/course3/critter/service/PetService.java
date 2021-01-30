@@ -20,8 +20,15 @@ public class PetService {
     @Autowired
     CustomerRepository customerRepository;
 
-    public Pet savePet(Pet pet){
-        return petRepository.save(pet);
+    public Pet savePet(Pet pet, Long customerId){
+        Customer c = customerRepository.getOne(customerId); //get customer
+        pet.setCustomer(c); //set customer for pet
+
+        //pet needs to be persisted before added to customer
+        Pet savedPet = petRepository.save(pet); //save pet
+        c.addPet(savedPet); //set pet for customer
+        customerRepository.save(c); //save customer
+        return savedPet;
     }
 
     public Pet findPet(Long id){

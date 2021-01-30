@@ -85,6 +85,9 @@ public class UserController {
     public CustomerDTO convertCToCDTO(Customer c){
         CustomerDTO cDTO = new CustomerDTO();
         BeanUtils.copyProperties(c, cDTO);
+        if (c.getPets() != null){
+            cDTO.setPetIds(c.getPets().stream().map(Pet::getId).collect(Collectors.toList()));
+        }
         return cDTO;
     }
 
