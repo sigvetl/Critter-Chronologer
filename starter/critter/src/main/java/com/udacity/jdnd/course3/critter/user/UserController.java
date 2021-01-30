@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -74,12 +76,22 @@ public class UserController {
         Employee e = employeeService.findEmployeeById(employeeId);
         e.setDaysAvailable(daysAvailable);
         employeeService.save(e);
-        throw new UnsupportedOperationException();
+        //throw new UnsupportedOperationException();
     }
 
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        List<EmployeeDTO> employeeDTOs = employeeService.getAllEmployees().stream().map(this::convertEToEDTO).collect(Collectors.toList());
+        List<EmployeeDTO> matches = new ArrayList<>();
+        DayOfWeek d = employeeDTO.getDate().getDayOfWeek();
+        //needs optimizing
+        for (EmployeeDTO e : employeeDTOs) { //for employee in all employees
+            if ((e.getDaysAvailable().contains(d)) && e.getSkills().containsAll(employeeDTO.getSkills())) {
+                matches.add(e);
+            }
+        }
+        return matches;
+        //throw new UnsupportedOperationException();
     }
 
     public CustomerDTO convertCToCDTO(Customer c){
