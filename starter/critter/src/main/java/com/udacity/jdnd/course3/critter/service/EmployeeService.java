@@ -23,9 +23,14 @@ public class EmployeeService {
         return e.orElse(null);
     }
 
+    public List<Employee> findEmployeesById(List<Long> ids){
+        return employeeRepository.findAllById(ids);
+    }
+
     public List<Employee> getAllEmployees(){
         return employeeRepository.findAll();
     }
+
 
 
 

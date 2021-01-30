@@ -188,6 +188,9 @@ public class CritterFunctionalTest {
         scheduleController.createSchedule(createScheduleDTO(petList, employeeList, date, skillSet));
         ScheduleDTO scheduleDTO = scheduleController.getAllSchedules().get(0);
 
+        System.out.println("getempl " + scheduleDTO.getEmployeeIds());
+        System.out.println("employeelist " + employeeList);
+
         Assertions.assertEquals(scheduleDTO.getActivities(), skillSet);
         Assertions.assertEquals(scheduleDTO.getDate(), date);
         Assertions.assertEquals(scheduleDTO.getEmployeeIds(), employeeList);
