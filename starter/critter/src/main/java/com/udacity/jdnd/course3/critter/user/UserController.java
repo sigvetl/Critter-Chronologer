@@ -3,6 +3,7 @@ package com.udacity.jdnd.course3.critter.user;
 import com.udacity.jdnd.course3.critter.entity.Customer;
 import com.udacity.jdnd.course3.critter.entity.Employee;
 import com.udacity.jdnd.course3.critter.entity.Pet;
+import com.udacity.jdnd.course3.critter.pet.PetDTO;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.EmployeeService;
 import com.udacity.jdnd.course3.critter.service.PetService;
@@ -39,6 +40,10 @@ public class UserController {
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
         Customer c = convertCDTOToC(customerDTO);
+        if (customerDTO.getPetIds() != null){
+            List<Pet> pets = petService.findPetsById(customerDTO.getPetIds());
+            c.setPets(pets);
+        }
         return convertCToCDTO(customerService.save(c));
         //throw new UnsupportedOperationException();
     }
@@ -84,7 +89,6 @@ public class UserController {
         List<EmployeeDTO> employeeDTOs = employeeService.getAllEmployees().stream().map(this::convertEToEDTO).collect(Collectors.toList());
         List<EmployeeDTO> matches = new ArrayList<>();
         DayOfWeek d = employeeDTO.getDate().getDayOfWeek();
-        //needs optimizing
         for (EmployeeDTO e : employeeDTOs) { //for employee in all employees
             if ((e.getDaysAvailable().contains(d)) && e.getSkills().containsAll(employeeDTO.getSkills())) {
                 matches.add(e);

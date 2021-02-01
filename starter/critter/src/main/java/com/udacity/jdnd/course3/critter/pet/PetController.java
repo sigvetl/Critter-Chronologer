@@ -27,9 +27,12 @@ public class PetController {
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
         Pet pet = convertPetDTOToPet(petDTO);
-        Customer c = customerService.findCustomer(petDTO.getOwnerId());
+        if (petDTO.getOwnerId() != 0){
+            Customer c = customerService.findCustomer(petDTO.getOwnerId());
+            pet.setCustomer(c);
+        }
         //return petDTO
-        return convertPetToPetDTO(petService.savePet(pet, c.getId()));
+        return convertPetToPetDTO(petService.savePet(pet));
     }
 
     @GetMapping("/{petId}")
@@ -59,7 +62,9 @@ public class PetController {
     private PetDTO convertPetToPetDTO(Pet pet){
         PetDTO petDTO = new PetDTO();
         BeanUtils.copyProperties(pet, petDTO);
-        petDTO.setOwnerId(pet.getCustomer().getId());
+        if (pet.getCustomer() != null){
+            petDTO.setOwnerId(pet.getCustomer().getId());
+        }
         return petDTO;
     }
 
